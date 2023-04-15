@@ -19,7 +19,7 @@ if($method == "OPTIONS") {
 require_once    'vendor/autoload.php';
 require_once    'controller/accidentalidad.php';
 require_once    'auth/login.php';
-require_once    'controller/accidentalidad.php';
+require_once    'controller/encuesta.php';
 
 //Create and configure Slim app
 $config = ['settings' => [
@@ -41,7 +41,7 @@ $app->post('/login', function ( $request, $response) {
     return $response->withJson($rta);
 });
 
-//METODOS PARA ACCIDENTALIDAD
+// **********************************AQUI INICIAN LOS METODOS PARA ACCIDENTALIDAD***************************
 
 //METODO PARA CARGAR EL EVENTO
 $app->post('/loadEvent', function ( $request, $response) {
@@ -86,6 +86,7 @@ $app->post('/loadContrato', function ( $request, $response ) {
     return $response->withJson($rta);
 
 });
+
 
 //METODO QUE GUARDA LOS DATOS DEL FORMULARIO DE ACCIDENTES
 $app->post('/saveAccidente', function ($request, $response){
@@ -187,6 +188,517 @@ $app->post('/loadEstadisticas', function ( $request, $response ) {
 });
 
 
+//METODO PARA CONSULTAR ACCIDENTES
+$app->post('/consultarAccidente', function ( $request, $response ) {
+
+    $data = $request->getParams();
+
+    $accidente =  new Accidentalidad();
+
+    $rta = $accidente->consultarAccidente( $data['id_user'] );
+
+    return $response->withJson($rta);
+
+});
+
+//METODO PARA MOSTRAR EL accidente
+$app->post('/mostAccidente', function ( $request, $response ) {
+
+    $data = $request->getParams();
+
+    $accidente =  new Accidentalidad();
+
+    $rta = $accidente->mostAccidente( $data['id_accidente'] );
+
+    return $response->withJson($rta);
+
+});
+
+//METODO PARA EDITAR EL ACCIDENTE
+$app->post('/editAccidente', function ($request, $response){
+    
+    $data = $request->getParams();
+    
+    $saveAcci = new Accidentalidad();
+    
+    $rta = $saveAcci->editAccidente( 
+                                    $data['tipoEvento'],
+                                    $data['claseEvento'],
+                                    $data['municipio'],
+                                    $data['zona'],
+                                    $data['claseAccidente'],
+                                    $data['poblacion'],
+                                    $data['cedula'],
+                                    $data['nombreAccidentado'],
+                                    $data['cargoAccidentado'],
+                                    $data['trabajoNormal'],
+                                    $data['lugarAccidente'],
+                                    $data['fechaAccidente'],
+                                    $data['parteCuerpoAfectado'],
+                                    $data['descripcion'],
+                                    $data['nombreReportador'],
+                                    $data['cargoReportador'],
+                                    $data['fechaReporte'],
+                                    $data['estadoReporte'],
+                                    $data['adjunto'],
+                                    $data['contrato'],
+                                    $data['usuario'],
+                                    $data['id_accidente']
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+// *************************************AQUI FINALIZAN LOS METODOS PARA ACCIDENTALIDAD***************************
+
+//*************************************METODOS PARA ENCUESTA***********************/
+
+//METODO QUE CARGA LAS ENCUESTAS SEGUN EL USUARIO Y SU ROL
+$app->post('/nombreApp', function ( $request, $response ){
+
+    $data = $request->getParams();
+
+    $app = new Encuesta();
+
+    $rta = $app->nombreApp($data['id_user']);
+
+    return $response->withJson($rta);
+});
+
+//METODO QUE CARGA LAS PREGUNTAS SEGUN LA ENCUESTA SELECCIONADA
+$app->post('/loadPregunta', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $encuesta = new Encuesta();
+    $rta = $encuesta->loadPregunta( $data['id_app'] );
+    return $response->withJson($rta);
+});
+
+//METODO QUE CARGA LOS DATOS DEL USUARIO TABLA USUARIO
+$app->post('/loadUsuario', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $encuesta = new Encuesta();
+    $rta = $encuesta->loadUsuario( $data['id_user'] );
+    return $response->withJson($rta);
+});
+
+//METODO QUE CARGA LOS DATOS DEL ENCABEZADO TABLA APP
+$app->post('/loadEncabezado', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $encuesta = new Encuesta();
+    $rta = $encuesta->loadEncabezado( $data['id_app'] );
+    return $response->withJson($rta);
+});
+
+//METODO QUE CARGA LAS OPCIONES DE RESPUESTA PARA CADA PREGUNTA
+$app->post('/loadOpcionRta', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadOpcionRta( $data['id_pregunta'] );
+    return $response->withJson($rta);
+});
+
+//METODO QUE TRAE LOS USUARIOS
+$app->post('/loadUsurol', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadUsurol();
+    return $response->withJson($rta);
+});
+
+$app->post('/loadRoles', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadRoles();
+    return $response->withJson($rta);
+});
+
+
+$app->post('/loadPreguntas', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadPreguntas();
+    return $response->withJson($rta);
+});
+
+$app->post('/loadPreguntasopc', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadPreguntasopc();
+    return $response->withJson($rta);
+});
+
+$app->post('/loadOpcionesrta', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadOpcionesrta();
+    return $response->withJson($rta);
+});
+
+$app->post('/loadContratos', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadContratos();
+    return $response->withJson($rta);
+});
+$app->post('/finalizarEncuesta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveEnc = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ENCABEZADO y SE PASAN LOS DATOS
+    $rta = $saveEnc->finalizarEncuesta(
+                                    
+                                   
+                                    $data['numeroCuadrilla'],
+                                    $data['numeroConsignacion'],
+                                    $data['nombreJefe'],
+                                    $data['actividad'],
+                                    $data['fechaEncuesta'],
+                                    $data['numeroCont'],
+                                    $data['nombreEnc'],
+                                    $data['usuario']
+                                                                                           
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+$app->post('/loadUsucont', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadUsucont();
+    return $response->withJson($rta);
+});
+
+$app->post('/loadDependencia', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadDependencia();
+    return $response->withJson($rta);
+});
+
+
+$app->post('/loadApp', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadApp();
+    return $response->withJson($rta);
+});
+
+
+$app->post('/loadUsuarios', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadUsuarios();
+    return $response->withJson($rta);
+});
+
+//METODO QUE CARGA LAS OPCIONES DE RESPUESTA PARA CADA PREGUNTA
+$app->post('/loadFirmas', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $pregu = new Encuesta();
+    $rta = $pregu->loadFirmas( $data['id_encuesta'] );
+    return $response->withJson($rta);
+});
+
+
+
+//METODO QUE GUARDA LOS DATOS DEL ENCABEZADO DEL FORMULARIO
+$app->post('/saveEncuesta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveEnc = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ENCABEZADO y SE PASAN LOS DATOS
+    $rta = $saveEnc->saveEncuesta(
+                                    
+                                   
+                                    $data['numeroCuadrilla'],
+                                    $data['numeroConsignacion'],
+                                    $data['nombreJefe'],
+                                    $data['actividad'],
+                                    $data['fechaEncuesta'],
+                                    $data['numeroCont'],
+                                    $data['nombreEnc'],
+                                    $data['usuario']
+                                                                                           
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+$app->post('/guardarFirma', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveRespuesta = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ACCIDENTE y SE PASAN LOS DATOS
+    $rta = $saveRespuesta->guardarFirma(
+                                    $data['Nombres'],
+                                    $data['cedula'],                
+                                    $data['firma'], 
+                                    $data['id_encuesta']
+                                                                                                                    
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+$app->post('/eliminarFirma', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveRespuesta = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ACCIDENTE y SE PASAN LOS DATOS
+    $rta = $saveRespuesta->eliminarFirma(
+                                    $data['Nombres'],
+                                    $data['cedula'],                
+                                    $data['firma'], 
+                                    $data['id_encuesta']
+                                                                                                                    
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+
+$app->post('/saveRta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveRespuesta = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ACCIDENTE y SE PASAN LOS DATOS
+    $rta = $saveRespuesta->saveRta(
+                                    $data['respuesta'],
+                                    $data['observacion'],                
+                                    $data['image'], 
+                                    $data['pregunta'],
+                                    $data['opcion'],
+                                    $data['id_encuesta']
+                                    
+                                                                                      
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+
+
+
+$app->post('/saveRtaFinal', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveRespuesta = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ACCIDENTE y SE PASAN LOS DATOS
+    $rta = $saveRespuesta->saveRtaFinal(
+                                    $data['respuesta'],
+                                    $data['observacion'],                
+                                    $data['image'], 
+                                    $data['pregunta'],
+                                    $data['opcion'],
+                                    $data['id_encuesta']
+                                    
+                                                                                      
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+//Metodo que ejecuta el proeso de eliminar Encuestas
+$app->post('/eliminarEncuesta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $saveRespuesta = new Encuesta();
+    //SE INVOCA EL METODO DE GUARDADO DEL ACCIDENTE y SE PASAN LOS DATOS
+    $rta = $saveRespuesta->eliminarEncuesta(
+                                
+                                    $data['id_encuesta']
+                                    
+                                                                                      
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+  // METODO QUE ME TRAE LA ULTIMA ENCUESTA REGISTRADA
+$app->post('/loadTraerEncuesta', function ( $request, $response ){
+
+    $data = $request->getParams();
+
+    $encuesta = new Encuesta();
+
+    $rta = $encuesta->loadTraerEncuesta($data['id_user']);
+
+    return $response->withJson($rta);
+});
+
+
+$app->post('/loadEncuestaFinalizada', function ( $request, $response ){
+
+    $data = $request->getParams();
+
+    $encuesta = new Encuesta();
+
+    $rta = $encuesta->loadEncuestaFinalizada($data['id_encuesta']);
+
+    return $response->withJson($rta);
+});
+
+$app->post('/backup', function ( $request, $response ){
+
+    $data = $request->getParams();
+
+    $encuesta = new Encuesta();
+
+    $rta = $encuesta->backup($data['fecha'], $data['accion'], $data['id_usuario']);
+
+    return $response->withJson($rta);
+});
+
+
+$app->post('/loadTraerEncuestaFinalizada', function ( $request, $response ){
+
+    $data = $request->getParams();
+
+    $encuesta = new Encuesta();
+
+    $rta = $encuesta->loadTraerEncuestaFinalizada($data['id_user'] );
+
+    return $response->withJson($rta);
+});
+
+$app->post('/loadTraerEncuestaFinalizada2', function ( $request, $response ){
+
+    $data = $request->getParams();
+
+    $encuesta = new Encuesta();
+
+    $rta = $encuesta->loadTraerEncuestaFinalizada2($data['numero']);
+
+    return $response->withJson($rta);
+});
+
+
+//METODO QUE TRAE TODOS LOS DATOS DE LAS ENCUESTAS YA REGISTRADAS EN LA DB
+$app->post('/loadEncuesta', function ( $request, $response) {
+
+    $data = $request->getParams();
+    
+    $encu = new Encuesta();
+
+    $rta = $encu->loadEncuesta($data['id_app'],
+                             $data['usuario']);
+
+    return $response->withJson($rta);
+
+});
+
+//METODO QUE TRAE LAS RESPUESTAS A LAS PREGUNTAS GUARDADAS EN LA DB
+$app->post('/loadRtaPreguntas', function ( $request, $response ) {
+
+    $data = $request->getParams();
+
+    $rtaPreg =  new Encuesta();
+
+    $rta = $rtaPreg->loadRtaPreguntas( $data['id_encuesta'] );
+
+    return $response->withJson($rta);
+
+});
+
+//METODO QUE RECIBE LOS DATOS A EDITAR DEL ENCABEZADO
+$app->post('/editarEncabezadoEncuesta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $editEnc = new Encuesta();
+    
+    $rta = $editEnc->editarEncabezadoEncuesta(
+                                    
+                                   
+                                    $data['numeroCuadrilla'],
+                                    $data['numeroConsignacion'],
+                                    $data['nombreJefe'],
+                                    $data['actividad'],
+                                    $data['fechaEncuesta'],
+                                    $data['numeroCont'],
+                                    $data['id_encuesta']
+                                  
+                                                                                           
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+//METODO QUE RECIBE LOS DATOS A FINALIZAR DEL ENCABEZADO
+$app->post('/finalizarEncabezadoEncuesta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $editEnc = new Encuesta();
+    
+    $rta = $editEnc->finalizarEncabezadoEncuesta(
+                                    
+                                   
+                                    $data['numeroCuadrilla'],
+                                    $data['numeroConsignacion'],
+                                    $data['nombreJefe'],
+                                    $data['actividad'],
+                                    $data['fechaEncuesta'],
+                                    $data['numeroCont'],
+                                    $data['id_encuesta']
+                                  
+                                                                                           
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+//METODO QUE RECIBE LOS DATOS A EDITAR DE CADA RESPUESTA DE LAS PREGUNTAS
+$app->post('/editarRtasEncuesta', function ($request, $response){
+    //SE RECUPERAN LOS DATOS ENVIADOS POR POST
+    $data = $request->getParams();
+    //SE INSTANCIA EL OBJETO 
+    $editarRtas = new Encuesta();
+    
+    $rta = $editarRtas->editarRtasEncuesta(
+                                    $data['respuesta'],
+                                    $data['observacion'],                
+                                    $data['image'], 
+                                    $data['opcion'],
+                                    $data['pregunta'],
+                                    $data['id_encuesta']
+                                    
+                                    
+                                                                                      
+    );
+    //SE RETORNA UNA RESPUESTA AL CLIENTE
+    return $response->withJson($rta);
+});
+
+//METODO QUE CARGA EL CONTENIDO DEL HOME
+$app->get('/contenidoHome', function ( $request, $response ){
+
+    $data = $request->getParams();
+    $encuesta = new Encuesta();
+    $rta = $encuesta->contenidoHome();
+    return $response->withJson($rta);
+});
 
 // Run app
 $app->run();

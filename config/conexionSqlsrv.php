@@ -23,7 +23,8 @@ class conexionSqlsrv {
                 )
             );
 
-            return $this->conn;
+            return $this->conn; 
+            echo 'bien';
         
         }
         catch(PDOException $e) {
@@ -31,6 +32,7 @@ class conexionSqlsrv {
             die("Error connecting to SQL Server: " . $e->getMessage());
 
             return $this->conn;
+echo 'mal';
 
         }
 

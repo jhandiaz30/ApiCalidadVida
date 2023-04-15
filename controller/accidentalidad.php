@@ -3,7 +3,6 @@
 //SE IMPORTA EL ARCHIVO DE CONEXION A LA BASE DE DATOS
 require_once 'config/conexionSqlsrv.php';
 
-
 class Accidentalidad{
 
     // $fechaIli = getdate();
@@ -212,27 +211,27 @@ class Accidentalidad{
     //METODO QUE INSERTA A LA BD LOS DATOS DE LOS FORMULARIOS DE ACCIDENTES 
     //SE PASAN LOS DATOS QUE IRAN A SER INSERTADOS EN LA BD SEGUN LA QUERY REALIZADA
     public function saveAccidente(
-                                    $tipoEvento,
-                                    $claseEvento,
-                                    $municipio,
-                                    $zona,
-                                    $claseAccidente,
-                                    $poblacion,
-                                    $cedula,
-                                    $nombreAccidentado,
-                                    $cargoAccidentado,
-                                    $trabajoNormal,
-                                    $lugarAccidente,
-                                    $fechaAccidente,
-                                    $parteCuerpoAfectado,
-                                    $descripcion,
-                                    $nombreReportador,
-                                    $cargoReportador,
-                                    $fechaReporte,
-                                    $estadoReporte,
-                                    $adjunto,
-                                    $contrato,
-                                    $usuario
+        $tipoEvento,
+        $claseEvento,
+        $municipio,
+        $zona,
+        $claseAccidente,
+        $poblacion,
+        $cedula,
+        $nombreAccidentado,
+        $cargoAccidentado,
+        $trabajoNormal,
+        $lugarAccidente,
+        $fechaAccidente,
+        $parteCuerpoAfectado,
+        $descripcion,
+        $nombreReportador,
+        $cargoReportador,
+        $fechaReporte,
+        $estadoReporte,
+        $adjunto,
+        $contrato,
+        $usuario
     ){
         try {
 
@@ -241,32 +240,36 @@ class Accidentalidad{
             if( $db != null ){
 
                 $queryContrato = $db -> prepare(
-                    "INSERT INTO ili_accidentes( id_tipo_eve, clase_eve, id_municipio, zona, id_clase_acc, poblacion, cedula_acc, nom_accidentado, cargo_accidentado, t_normal, lugar_acc, fecha_acc, p_cuerpo_afec, descripcion_acc, nom_reporta,      cargo_reporta, fh_reporte, estado_reporte, adjunto, id_contrato, id_usuario) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+                    "INSERT INTO ili_accidentes( id_tipo_eve, clase_eve, id_municipio, zona, 
+                    id_clase_acc, poblacion, cedula_acc, nom_accidentado, cargo_accidentado, 
+                    t_normal, lugar_acc, fecha_acc, p_cuerpo_afec, descripcion_acc, nom_reporta, 
+                    cargo_reporta, fh_reporte, estado_reporte, adjunto, id_contrato, id_usuario) 
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
                 );
-                //AQUI SE PASAN LOS DATOS QUE SERAN INSERTADOS EN LA BD, IMPORTANTE RESPETAR EL ORDEN EN COMO SE INSERTAR EN LA QUERY
-                //AQUI LOS PARAMETROS TAMBIEN DEBEN RESPETAR ESE ORDEN
+                /*AQUI SE PASAN LOS DATOS QUE SERAN INSERTADOS EN LA BD, IMPORTANTE RESPETAR EL ORDEN 
+                EN COMO SE INSERTAR EN LA QUERY AQUI LOS PARAMETROS TAMBIEN DEBEN RESPETAR ESE ORDEN*/
                 $queryContrato -> execute( array( 
-                                                $tipoEvento,
-                                                $claseEvento,
-                                                $municipio,
-                                                $zona,
-                                                $claseAccidente,
-                                                $poblacion,
-                                                $cedula,
-                                                $nombreAccidentado,
-                                                $cargoAccidentado,
-                                                $trabajoNormal,
-                                                $lugarAccidente,
-                                                $fechaAccidente,
-                                                $parteCuerpoAfectado,
-                                                $descripcion,
-                                                $nombreReportador,
-                                                $cargoReportador,
-                                                $fechaReporte,
-                                                $estadoReporte,
-                                                $adjunto,
-                                                $contrato,
-                                                $usuario
+                    $tipoEvento,
+                    $claseEvento,
+                    $municipio,
+                    $zona,
+                    $claseAccidente,
+                    $poblacion,
+                    $cedula,
+                    $nombreAccidentado,
+                    $cargoAccidentado,
+                    $trabajoNormal,
+                    $lugarAccidente,
+                    $fechaAccidente,
+                    $parteCuerpoAfectado,
+                    $descripcion,
+                    $nombreReportador,
+                    $cargoReportador,
+                    $fechaReporte,
+                    $estadoReporte,
+                    $adjunto,
+                    $contrato,
+                    $usuario
                 ) );
         
                 // $cont = $queryContrato->fetchAll( PDO::FETCH_ASSOC );
@@ -302,7 +305,8 @@ class Accidentalidad{
         }
     }
 
-    //SE CARGA EL COMBO DE SELECCIONAR EL CONTRATO Y APARTIR DE ESO CARGA INMEDIATAMENTE EL ADMINISTRADOR Y LA DEPENDENCIA 
+    /*SE CARGA EL COMBO DE SELECCIONAR EL CONTRATO Y APARTIR DE ESO CARGA INMEDIATAMENTE EL 
+    ADMINISTRADOR Y LA DEPENDENCIA*/ 
     public function loadAdminDepend( $id_contrato ){
 
         try {
@@ -313,8 +317,8 @@ class Accidentalidad{
 
                 $queryAdminDepend = $db -> prepare(
 
-                    "SELECT C.COORDINADOR AS N_COORDINADOR,  C.FECHA_INI AS FECHA_INICIAL, EOMONTH(GETDATE()) AS FECHA_FINAL,
-                    D.DESCRIPCION AS N_DEPENDENCIA FROM CONTRATO AS C
+                    "SELECT C.COORDINADOR AS N_COORDINADOR,  C.FECHA_INI AS FECHA_INICIAL, 
+                    EOMONTH(GETDATE()) AS FECHA_FINAL, D.DESCRIPCION AS N_DEPENDENCIA FROM CONTRATO AS C
                     INNER JOIN DEPENDENCIA AS D ON C.ID_DEPENDENCIA = D.ID_DEPENDENCIA
                     WHERE C.ID_CONTRATO = ? AND C.ESTADO = 'Activo';"
                 );
@@ -360,14 +364,14 @@ class Accidentalidad{
 
     //METODO QUE INSERTA A LA BD LOS DATOS DEL FORMULARIO DE ILI
     public function saveIli(
-                            $numeroCont,
-                            $usuario,
-                            $accidentesIncapacitantes,
-                            $accidentesNoIncapacitantes,
-                            $diasPerdidos,
-                            $horasHombres,
-                            $periodoContrato,
-                            $id_ili           
+        $numeroCont,
+        $usuario,
+        $accidentesIncapacitantes,
+        $accidentesNoIncapacitantes,
+        $diasPerdidos,
+        $horasHombres,
+        $periodoContrato,
+        $id_ili           
                             
     ){
         try {
@@ -379,56 +383,62 @@ class Accidentalidad{
                 //SE OBTIENE LA FECHA DEL SISTEMA
                 $fechaSistema = date("Y-m-d");
 
-                $frecuencia = ( ($accidentesIncapacitantes + $accidentesNoIncapacitantes) * 250000 ) / $horasHombres;
+                $frecuencia = (($accidentesIncapacitantes + $accidentesNoIncapacitantes) * 250000) / $horasHombres;
 
                 $severidad = ( $diasPerdidos * 250000 ) / $horasHombres;
 
-                $ili = ($frecuencia / $severidad) * 1000;
+                if ($severidad==0 ){
+                    $ili=0;
+
+                }else{  
+                    $ili = ($frecuencia / $severidad) * 1000;
+
+                }
 
                 if( $id_ili != 'null' && !empty($id_ili) && isset($id_ili) ){
 
                     $queryIli = $db -> prepare(
-                        "UPDATE ili_ili SET fecha_sistema = ?, acc_incap = ?, acc_noincap = ?, dias_perdidos = ?, horas_ht = ?, periodo = ?, severidad = ?, frecuencia = ?, ili = ?
+                        "UPDATE ili_ili SET fecha_sistema = ?, acc_incap = ?, acc_noincap = ?, 
+                        dias_perdidos = ?, horas_ht = ?, periodo = ?, severidad = ?, frecuencia = ?, ili = ?
                         WHERE id_ili = ?;"
                     );
 
                     $queryIli -> execute( array( 
-                            $fechaSistema,
-                            $accidentesIncapacitantes,
-                            $accidentesNoIncapacitantes,
-                            $diasPerdidos,
-                            $horasHombres,
-                            $periodoContrato,
-                            $severidad,
-                            $frecuencia,
-                            $ili,
-                            $id_ili
+                        $fechaSistema,
+                        $accidentesIncapacitantes,
+                        $accidentesNoIncapacitantes,
+                        $diasPerdidos,
+                        $horasHombres,
+                        $periodoContrato,
+                        $severidad,
+                        $frecuencia,
+                        $ili,
+                        $id_ili
                     ));
 
                 }else{
 
                     $queryIli = $db -> prepare(
-                        "INSERT INTO ili_ili (id_contrato, id_usuario, fecha_sistema, acc_incap, acc_noincap, dias_perdidos, horas_ht, periodo, severidad, frecuencia, ili) VALUES 
-                        (?,?,?,?,?,?,?,?,?,?,?);"
+                        "INSERT INTO ili_ili (id_contrato, id_usuario, fecha_sistema, acc_incap, 
+                        acc_noincap, dias_perdidos, horas_ht, periodo, severidad, frecuencia, ili) 
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?);"
                     );
 
                     $queryIli -> execute( array( 
-                                $numeroCont,
-                                $usuario,
-                                $fechaSistema,
-                                $accidentesIncapacitantes,
-                                $accidentesNoIncapacitantes,
-                                $diasPerdidos,
-                                $horasHombres,
-                                $periodoContrato,
-                                $severidad,
-                                $frecuencia,
-                                $ili
+                        $numeroCont,
+                        $usuario,
+                        $fechaSistema,
+                        $accidentesIncapacitantes,
+                        $accidentesNoIncapacitantes,
+                        $diasPerdidos,
+                        $horasHombres,
+                        $periodoContrato,
+                        $severidad,
+                        $frecuencia,
+                        $ili
                     ));
 
                 }
-
-
 
                 if( $queryIli-> errorCode() == '00000'  ){
 
@@ -469,7 +479,7 @@ class Accidentalidad{
 
                 $queryIli = $db -> prepare(
                     "SELECT * FROM ILI_ILI 
-                     WHERE ID_CONTRATO = ? AND SUBSTRING(PERIODO,1,4) = ? AND SUBSTRING(PERIODO,6,2) = ? "
+                    WHERE ID_CONTRATO = ? AND SUBSTRING(PERIODO,1,4) = ? AND SUBSTRING(PERIODO,6,2) = ? "
                 );
 
                 $queryIli -> execute( array( $id_contrato, $anio, $mes ) );
@@ -487,8 +497,6 @@ class Accidentalidad{
                     $this->responseObj->message  = "No se encontro registro de ili";
                 }
 
-                
-
             }else{
                 
                 $this->responseObj->error    = 3;
@@ -497,7 +505,6 @@ class Accidentalidad{
             }
 
             return $this->responseObj;
-
 
         } catch (PDOException $e) {
 
@@ -521,17 +528,29 @@ class Accidentalidad{
                 $queryEstadistica = $db -> prepare(
 
                     "SELECT x.MES ,ISNULL(ili_ili.ili,0) AS ILI FROM (
-                        SELECT CONCAT( FORMAT( DATEADD(MM, 0, GETDATE()), 'yyyy' ), '-',  FORMAT(  DATEADD(MM, 0, GETDATE()) , 'MM')  )AS PE,  FORMAT(  DATEADD(MM, 0, GETDATE()) , 'MM') AS MES
+                        SELECT CONCAT( FORMAT( DATEADD(MM, 0, GETDATE()), 'yyyy' ), '-',  
+                        FORMAT(  DATEADD(MM, 0, GETDATE()) , 'MM')  )AS PE,  
+                        FORMAT(  DATEADD(MM, 0, GETDATE()) , 'MM') AS MES 
                         UNION 
-                        SELECT CONCAT( FORMAT( DATEADD(MM, -1, GETDATE()), 'yyyy' ), '-',  FORMAT(  DATEADD(MM, -1, GETDATE()) , 'MM')   )AS PE ,  FORMAT(  DATEADD(MM, -1, GETDATE()) , 'MM') AS MES
+                        SELECT CONCAT( FORMAT( DATEADD(MM, -1, GETDATE()), 'yyyy' ), '-',  
+                        FORMAT(  DATEADD(MM, -1, GETDATE()) , 'MM')   )AS PE ,  
+                        FORMAT(  DATEADD(MM, -1, GETDATE()) , 'MM') AS MES 
                         UNION 
-                        SELECT CONCAT( FORMAT( DATEADD(MM, -2, GETDATE()), 'yyyy' ), '-',  FORMAT(  DATEADD(MM, -2, GETDATE()) , 'MM')   )AS PE ,  FORMAT(  DATEADD(MM, -2, GETDATE()) , 'MM') AS MES
+                        SELECT CONCAT( FORMAT( DATEADD(MM, -2, GETDATE()), 'yyyy' ), '-',  
+                        FORMAT(  DATEADD(MM, -2, GETDATE()) , 'MM')   )AS PE ,  
+                        FORMAT(  DATEADD(MM, -2, GETDATE()) , 'MM') AS MES 
                         UNION 
-                        SELECT CONCAT( FORMAT( DATEADD(MM, -3, GETDATE()), 'yyyy' ), '-',  FORMAT(  DATEADD(MM, -3, GETDATE()) , 'MM')   )AS PE ,  FORMAT(  DATEADD(MM, -3, GETDATE()) , 'MM') AS MES
+                        SELECT CONCAT( FORMAT( DATEADD(MM, -3, GETDATE()), 'yyyy' ), '-',  
+                        FORMAT(  DATEADD(MM, -3, GETDATE()) , 'MM')   )AS PE, 
+                        FORMAT(  DATEADD(MM, -3, GETDATE()) , 'MM') AS MES 
                         UNION 
-                        SELECT CONCAT( FORMAT( DATEADD(MM, -4, GETDATE()), 'yyyy' ), '-',  FORMAT(  DATEADD(MM, -4, GETDATE()) , 'MM')  )AS PE ,  FORMAT(  DATEADD(MM, -4, GETDATE()) , 'MM') AS MES
+                        SELECT CONCAT( FORMAT( DATEADD(MM, -4, GETDATE()), 'yyyy' ), '-',
+                        FORMAT(  DATEADD(MM, -4, GETDATE()) , 'MM')  )AS PE,
+                        FORMAT(  DATEADD(MM, -4, GETDATE()) , 'MM') AS MES 
                         UNION 
-                        SELECT CONCAT( FORMAT( DATEADD(MM, -5, GETDATE()), 'yyyy' ), '-',  FORMAT(  DATEADD(MM, -5, GETDATE()) , 'MM') ) AS PE ,  FORMAT(  DATEADD(MM, -5, GETDATE()) , 'MM') AS MES
+                        SELECT CONCAT( FORMAT( DATEADD(MM, -5, GETDATE()), 'yyyy' ), '-',  
+                        FORMAT(  DATEADD(MM, -5, GETDATE()) , 'MM') ) AS PE,
+                        FORMAT(  DATEADD(MM, -5, GETDATE()) , 'MM') AS MES
                     ) as x
                     LEFT JOIN ili_ili 
                     ON periodo = x.PE
@@ -576,6 +595,200 @@ class Accidentalidad{
 
     }
 
+
+    public function consultarAccidente( $id_user ){
+        try {
+
+            $db = $this->conexion->conectar();
+
+            if( $db != null ){
+
+                $queryAci = $db -> prepare(
+                    "SELECT  * FROM ili_accidentes WHERE id_usuario = ?
+                    ORDER BY DATEPART(year, fecha_acc) DESC, DATEPART(month, fecha_acc) DESC,
+                    DATEPART(day, fecha_acc) DESC;"
+                );
+
+                $queryAci -> execute( array( $id_user  ) );
+        
+                $accidente = $queryAci->fetchAll( PDO::FETCH_ASSOC );
+
+                if( $accidente ){
+
+                    $this->responseObj->error    = 0;
+                    $this->responseObj->message  = $accidente;
+
+                }else{
+
+                    $this->responseObj->error    = 2;
+                    $this->responseObj->message  = "No se encontro registro de accidentes";
+                }       
+
+            }else{
+                
+                $this->responseObj->error    = 3;
+                $this->responseObj->message  = "Error al conectar con el gestor de base de datos";
+
+            }
+
+            return $this->responseObj;
+
+
+        } catch (PDOException $e) {
+
+            $this->responseObj->error    = 1;
+            $this->responseObj->message  = $e->getMessage();
+             
+            return $this->responseObj;
+
+        }
+    }
+
+        public function mostAccidente( $id_accidente ){
+            try {
+    
+                $db = $this->conexion->conectar();
+    
+                if( $db != null ){
+    
+                    $queryAci = $db -> prepare(
+                        "SELECT  * FROM ili_accidentes WHERE id_accidente = ?;"
+                    );
+    
+                    $queryAci -> execute( array( $id_accidente  ) );
+            
+                    $accidente = $queryAci->fetchAll( PDO::FETCH_ASSOC );
+    
+                    if( $accidente ){
+    
+                        $this->responseObj->error    = 0;
+                        $this->responseObj->message  = $accidente;
+    
+                    }else{
+    
+                        $this->responseObj->error    = 2;
+                        $this->responseObj->message  = "No se encontro registro de accidentes";
+                    }       
+    
+                }else{
+                    
+                    $this->responseObj->error    = 3;
+                    $this->responseObj->message  = "Error al conectar con el gestor de base de datos";
+    
+                }
+    
+                return $this->responseObj;
+    
+    
+            } catch (PDOException $e) {
+    
+                $this->responseObj->error    = 1;
+                $this->responseObj->message  = $e->getMessage();
+                 
+                return $this->responseObj;
+    
+            }
+    }
+
+
+    public function editAccidente(
+        $tipoEvento,
+        $claseEvento,
+        $municipio,
+        $zona,
+        $claseAccidente,
+        $poblacion,
+        $cedula,
+        $nombreAccidentado,
+        $cargoAccidentado,
+        $trabajoNormal,
+        $lugarAccidente,
+        $fechaAccidente,
+        $parteCuerpoAfectado,
+        $descripcion,
+        $nombreReportador,
+        $cargoReportador,
+        $fechaReporte,
+        $estadoReporte,
+        $adjunto,
+        $contrato,
+        $usuario,
+        $id_accidente
+){
+try {
+
+$db = $this->conexion->conectar();
+
+if( $db != null ){
+
+$queryContrato = $db -> prepare(
+"UPDATE  ili_accidentes SET id_tipo_eve = ?, clase_eve = ?, id_municipio= ?, zona= ?, id_clase_acc= ?, 
+poblacion= ?, cedula_acc= ?, nom_accidentado= ?, cargo_accidentado= ?, t_normal= ?, lugar_acc= ?, fecha_acc= ?,
+p_cuerpo_afec= ?, descripcion_acc= ?, nom_reporta= ?, cargo_reporta= ?, fh_reporte= ?, estado_reporte= ?,
+adjunto= ?, id_contrato= ?, id_usuario= ?
+ WHERE id_accidente = ?;"
+);
+/*AQUI SE PASAN LOS DATOS QUE SERAN INSERTADOS EN LA BD, IMPORTANTE RESPETAR EL ORDEN EN COMO SE 
+INSERTAR EN LA QUERY AQUI LOS PARAMETROS TAMBIEN DEBEN RESPETAR ESE ORDEN*/
+$queryContrato -> execute( array( 
+    $tipoEvento,
+    $claseEvento,
+    $municipio,
+    $zona,
+    $claseAccidente,
+    $poblacion,
+    $cedula,
+    $nombreAccidentado,
+    $cargoAccidentado,
+    $trabajoNormal,
+    $lugarAccidente,
+    $fechaAccidente,
+    $parteCuerpoAfectado,
+    $descripcion,
+    $nombreReportador,
+    $cargoReportador,
+    $fechaReporte,
+    $estadoReporte,
+    $adjunto,
+    $contrato,
+    $usuario,
+    $id_accidente
+) );
+
+// $cont = $queryContrato->fetchAll( PDO::FETCH_ASSOC );
+
+if( $queryContrato-> errorCode() == '00000'  ){
+
+$this->responseObj->error    = 0;
+$this->responseObj->message  = "Operación realizada exitosamente.";
+
+}else{
+
+$this->responseObj->error    = 2;
+$this->responseObj->message  = "Operación no realizada.";
+}
+
+
+
+}else{
+
+$this->responseObj->error    = 3;
+$this->responseObj->message  = "Error al conectar con el gestor de base de datos";
+
+}
+
+return $this->responseObj;
+
+} catch (PDOException $e) {
+
+$this->responseObj->error    = 1;
+$this->responseObj->message  = $e->getMessage();
+
+return $this->responseObj;
+}
+}
+
+    
 
 }
 
